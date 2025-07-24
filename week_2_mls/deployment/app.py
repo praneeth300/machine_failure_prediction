@@ -32,14 +32,8 @@ input_data = pd.DataFrame([{
     'Type': Type
 }])
 
-# Set classification threshold
-classification_threshold = 0.45  # You may want to optimize this
-
-# Predict on input
 if st.button("Predict Failure"):
-    prediction_proba = model.predict_proba(input_data)[0, 1]
-    prediction = int(prediction_proba >= classification_threshold)
+    prediction = model.predict(input_data)[0]
     result = "Machine Failure" if prediction == 1 else "No Failure"
     st.subheader("Prediction Result:")
-    st.write(f"Probability of Failure: **{prediction_proba:.2f}**")
     st.success(f"The model predicts: **{result}**")
