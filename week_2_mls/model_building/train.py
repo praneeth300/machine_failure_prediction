@@ -65,23 +65,18 @@ param_grid = {
 model_pipeline = make_pipeline(preprocessor, xgb_model)
 
 # Grid search with cross-validation
-grid_search = GridSearchCV(model_pipeline, param_grid, cv=5, n_jobs=-1)
+grid_search = GridSearchCV(model_pipeline, param_grid, cv=5, scoring='recall', n_jobs=-1)
 grid_search.fit(Xtrain, ytrain)
 
 # Best model
 best_model = grid_search.best_estimator_
 print("Best Params:\n", grid_search.best_params_)
 
-# Prediction threshold
-classification_threshold = 0.45
-
 # Predict on training set
-y_pred_train_proba = best_model.predict_proba(Xtrain)[:, 1]
-y_pred_train = (y_pred_train_proba >= classification_threshold).astype(int)
+y_pred_train = best_model.predict(Xtrain)
 
 # Predict on test set
-y_pred_test_proba = best_model.predict_proba(Xtest)[:, 1]
-y_pred_test = (y_pred_test_proba >= classification_threshold).astype(int)
+y_pred_test = best_model.predict(Xtest)
 
 # Evaluation
 print("\nTraining Classification Report:")
